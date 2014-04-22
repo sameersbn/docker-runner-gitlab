@@ -1,0 +1,60 @@
+#!/bin/bash
+set -e
+
+adduser --disabled-login --gecos 'GitLab' git
+
+cat > /etc/supervisor/conf.d/mysqld.conf <<EOF
+[program:mysqld]
+priority=20
+directory=/tmp
+command=/usr/bin/mysqld_safe
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
+stderr_logfile=/var/log/supervisor/%(program_name)s.log
+EOF
+
+sed 's/daemonize yes/daemonize no/' -i /etc/redis/redis.conf
+cat > /etc/supervisor/conf.d/redis-server.conf <<EOF
+[program:redis-server]
+priority=20
+directory=/tmp
+command=/usr/bin/redis-server /etc/redis/redis.conf
+user=redis
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
+stderr_logfile=/var/log/supervisor/%(program_name)s.log
+EOF
+
+# start supervisor
+/usr/bin/supervisord
+
+# wait for mysql server to come online (max 120 seconds)
+timeout=120
+while ! mysqladmin -uroot status >/dev/null 2>&1
+do
+	timeout=$(expr $timeout - 1)
+	if [ $timeout -eq 0 ]; then
+		echo "Failed to start mysql server"
+		exit 1
+	fi
+	sleep 1
+done
+
+# create user for the runner
+echo "CREATE USER 'runner'@'localhost' IDENTIFIED BY 'password';" | mysql -uroot
+echo "GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';" | mysql -uroot
+echo "FLUSH PRIVILEGES;" | mysql -uroot
+
+# install phantomjs at /app prefix
+mkdir -p /app/phantomjs
+PHANTOMJS_VERSION=1.8.1
+if [ -f /app/setup/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 ]; then
+  tar -jvxf /app/setup/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 --strip=1 -C /app/phantomjs/
+else
+  wget "http://phantomjs.googlecode.com/files/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" -O - | tar -jvxf - --strip=1 -C /app/phantomjs/
+fi
+ln -s /app/phantomjs/bin/phantomjs /usr/bin/phantomjs
+phantomjs --version
