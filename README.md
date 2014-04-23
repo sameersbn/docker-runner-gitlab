@@ -17,7 +17,7 @@ Since we inherit the [sameersbn/gitlab-ci-runner](https://github.com/sameersbn/d
 
 All package installations are performed in the [Dockerfile](https://github.com/sameersbn/docker-runner-gitlab/master/Dockerfile) while the system configuration, such as mysql and redis setup, are performed in the [install](https://github.com/sameersbn/docker-runner-gitlab/blob/master/assets/setup/install) script.
 
-Rest of this document describes use of the runner to perform continiuos integration of gitlab-ce.
+Rest of this document describes use of the runner to perform continuous integration of gitlab-ce.
 
 # Installation
 
