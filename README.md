@@ -15,7 +15,7 @@ Built on top of the [sameersbn/gitlab-ci-runner](https://github.com/sameersbn/do
 
 Since we inherit the [sameersbn/gitlab-ci-runner](https://github.com/sameersbn/docker-gitlab-ci-runner) base image, we also inherit its runtime. This means we only have to setup the image to satisfy your projects build requirements which in this case is gitlab-ce.
 
-All package installations are performed in the [Dockerfile](https://github.com/sameersbn/docker-runner-gitlab/master/Dockerfile) while the system configuration, such as mysql and redis setup, are performed in the [install](https://github.com/sameersbn/docker-runner-gitlab/blob/master/assets/setup/install) script.
+All package installations are performed in the [Dockerfile](https://github.com/sameersbn/docker-runner-gitlab/blob/master/Dockerfile) while the system configuration, such as mysql and redis setup, are performed in the [install](https://github.com/sameersbn/docker-runner-gitlab/blob/master/assets/setup/install) script.
 
 Rest of this document describes use of the runner to perform continuous integration of gitlab-ce.
 
