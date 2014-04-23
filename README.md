@@ -53,7 +53,7 @@ docker run --name runner-gitlab -d \
 	sameersbn/runner-gitlab:latest
 ```
 
-You now have the runner to perform continous integration if GitLab CE.
+You now have the runner to perform continous integration of GitLab CE.
 
 Login to your GitLab CI server and add a CI build for gitlab-ce with the following build settings
 
