@@ -39,7 +39,7 @@ docker build --tag="$USER/runner-gitlab" .
 For a runner to do its trick, it has to first be registered/authorized on the GitLab CI server. This can be done by running the image with the **app:setup** command.
 
 ```bash
-mkdir -p /opt/gitlab-ci-runner
+mkdir -p /opt/runner-gitlab
 docker run --name runner-gitlab -i -t --rm \
 	-v /opt/runner-gitlab:/home/gitlab_ci_runner/data \
   sameersbn/runner-gitlab:latest app:setup
