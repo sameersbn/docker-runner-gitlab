@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab-ci-runner:4.0.0
+FROM sameersbn/gitlab-ci-runner:5.0.0
 MAINTAINER sameer@damagehead.com
 
 RUN apt-get update && \

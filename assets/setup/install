@@ -29,7 +29,7 @@ stderr_logfile=/var/log/supervisor/%(program_name)s.log
 EOF
 
 # start supervisor
-/usr/bin/supervisord
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
 # wait for mysql server to come online (max 120 seconds)
 timeout=120
