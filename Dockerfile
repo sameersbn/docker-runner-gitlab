@@ -7,7 +7,7 @@ RUN apt-get update && \
 			libgdbm-dev libreadline-dev libncurses5-dev libffi-dev \
 			libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev \
 			mysql-server mysql-client redis-server fontconfig && \
-		apt-get clean && rm -rf /var/lib/apt/lists/* # 20140818
+		rm -rf /var/lib/apt/lists/* # 20140818
 
 ADD assets/ /app/
 RUN chmod 755 /app/setup/install
