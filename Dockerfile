@@ -1,4 +1,4 @@
-FROM sameersbn/debian:jessie.20140918
+FROM sameersbn/gitlab-ci-runner:latest
 MAINTAINER sameer@damagehead.com
 
 RUN apt-get update && \
