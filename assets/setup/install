@@ -49,15 +49,16 @@ EOF
 # start supervisor
 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
-# wait for mysql server to come online (max 120 seconds)
-timeout=120
-while ! mysqladmin -uroot status >/dev/null 2>&1
+# wait for mysql server to start (max 30 seconds)
+timeout=30
+while ! /usr/bin/mysqladmin -u root status >/dev/null 2>&1
 do
-  timeout=$(expr $timeout - 1)
+  timeout=$(($timeout - 1))
   if [ $timeout -eq 0 ]; then
-    echo "Failed to start mysql server"
+    echo "Could not connect to mysql server. Aborting..."
     exit 1
   fi
+  echo "Waiting for database server to accept connections..."
   sleep 1
 done
 
