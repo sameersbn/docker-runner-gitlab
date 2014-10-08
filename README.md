@@ -59,7 +59,6 @@ Login to your GitLab CI server and add a CI build for gitlab-ce with the followi
 
 ```bash
 ruby -v
-gem install bundler
 cp config/database.yml.mysql config/database.yml
 cp config/gitlab.yml.example config/gitlab.yml
 sed "s/username\:.*$/username\: runner/" -i config/database.yml
