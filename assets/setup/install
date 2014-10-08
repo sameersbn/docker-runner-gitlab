@@ -3,6 +3,24 @@ set -e
 
 adduser --disabled-login --gecos 'GitLab' git
 
+# disable pam authentication for sshd
+sed 's/UsePAM yes/UsePAM no/' -i /etc/ssh/sshd_config
+sed 's/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/' -i /etc/ssh/sshd_config
+echo "UseDNS no" >> /etc/ssh/sshd_config
+
+# configure supervisor to start sshd
+mkdir -p /var/run/sshd
+cat > /etc/supervisor/conf.d/sshd.conf <<EOF
+[program:sshd]
+directory=/
+command=/usr/sbin/sshd -D
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
+stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
+EOF
+
 cat > /etc/supervisor/conf.d/mysqld.conf <<EOF
 [program:mysqld]
 priority=20
