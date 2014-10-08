@@ -3,6 +3,24 @@ set -e
 
 adduser --disabled-login --gecos 'GitLab' git
 
+# disable pam authentication for sshd
+sed 's/UsePAM yes/UsePAM no/' -i /etc/ssh/sshd_config
+sed 's/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/' -i /etc/ssh/sshd_config
+echo "UseDNS no" >> /etc/ssh/sshd_config
+
+# configure supervisor to start sshd
+mkdir -p /var/run/sshd
+cat > /etc/supervisor/conf.d/sshd.conf <<EOF
+[program:sshd]
+directory=/
+command=/usr/sbin/sshd -D
+user=root
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/%(program_name)s.log
+stderr_logfile=/var/log/supervisor/%(program_name)s_error.log
+EOF
+
 cat > /etc/supervisor/conf.d/mysqld.conf <<EOF
 [program:mysqld]
 priority=20
@@ -31,22 +49,23 @@ EOF
 # start supervisor
 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
-# wait for mysql server to come online (max 120 seconds)
-timeout=120
-while ! mysqladmin -uroot status >/dev/null 2>&1
+# wait for mysql server to start (max 30 seconds)
+timeout=30
+while ! /usr/bin/mysqladmin -u root status >/dev/null 2>&1
 do
-  timeout=$(expr $timeout - 1)
+  timeout=$(($timeout - 1))
   if [ $timeout -eq 0 ]; then
-    echo "Failed to start mysql server"
+    echo "Could not connect to mysql server. Aborting..."
     exit 1
   fi
+  echo "Waiting for database server to accept connections..."
   sleep 1
 done
 
 # create user for the runner
-echo "CREATE USER 'runner'@'localhost' IDENTIFIED BY 'password';" | mysql -uroot
-echo "GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';" | mysql -uroot
-echo "FLUSH PRIVILEGES;" | mysql -uroot
+mysql -uroot -e "CREATE USER 'runner'@'localhost' IDENTIFIED BY 'password';"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';"
+mysql -uroot -e "FLUSH PRIVILEGES;"
 
 # install phantomjs at /app prefix
 mkdir -p /app/phantomjs
