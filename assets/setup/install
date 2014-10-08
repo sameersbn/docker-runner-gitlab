@@ -63,9 +63,9 @@ do
 done
 
 # create user for the runner
-echo "CREATE USER 'runner'@'localhost' IDENTIFIED BY 'password';" | mysql -uroot
-echo "GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';" | mysql -uroot
-echo "FLUSH PRIVILEGES;" | mysql -uroot
+mysql -uroot -e "CREATE USER 'runner'@'localhost' IDENTIFIED BY 'password';"
+mysql -uroot -e "GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';"
+mysql -uroot -e "FLUSH PRIVILEGES;"
 
 # install phantomjs at /app prefix
 mkdir -p /app/phantomjs
