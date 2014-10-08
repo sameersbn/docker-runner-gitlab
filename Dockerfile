@@ -2,7 +2,7 @@ FROM sameersbn/gitlab-ci-runner:latest
 MAINTAINER sameer@damagehead.com
 
 RUN apt-get update && \
-    apt-get install -y build-essential supervisor \
+    apt-get install -y build-essential \
       libmysqlclient-dev zlib1g-dev libyaml-dev libssl-dev \
       libgdbm-dev libreadline-dev libncurses5-dev libffi-dev \
       libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev \
