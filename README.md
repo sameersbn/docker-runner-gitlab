@@ -1,5 +1,6 @@
 # Table of Contents
 - [Introduction](#introduction)
+- [Contributing](#contributing)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
@@ -9,6 +10,7 @@
 - [Upgrading](#upgrading)
 
 # Introduction
+
 A CI runner for gitlab-ce.
 
 Built on top of the [sameersbn/gitlab-ci-runner](https://github.com/sameersbn/docker-gitlab-ci-runner) base image, this repo demonstrates the use of sameersbn/gitlab-ci-runner to build a runner for your project.
@@ -18,6 +20,14 @@ Since we inherit the [sameersbn/gitlab-ci-runner](https://github.com/sameersbn/d
 All package installations are performed in the [Dockerfile](https://github.com/sameersbn/docker-runner-gitlab/blob/master/Dockerfile) while the system configuration, such as mysql and redis setup, are performed in the [install](https://github.com/sameersbn/docker-runner-gitlab/blob/master/assets/setup/install) script.
 
 Rest of this document describes use of the runner to perform continuous integration of gitlab-ce.
+
+# Contributing
+
+If you find this image useful here's how you can help:
+
+- Send a Pull Request with your awesome new features and bug fixes
+- Help new users with [Issues](https://github.com/sameersbn/docker-runner-gitlab/issues) they may encounter
+- Send me a tip on [Gittip](https://gittip.com/sameersbn/) or using Bitcoin at **16rDxVqJPyYAFYPLduTaSiwe7ZiY1hHqKM**
 
 # Installation
 
