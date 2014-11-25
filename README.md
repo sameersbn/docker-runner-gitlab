@@ -3,10 +3,8 @@
 - [Contributing](#contributing)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-- [Configuration](#configuration)
-	- [Data Store](#data-store)
-- [Maintenance](#maintenance)
-	- [SSH Login](#ssh-login)
+- [Data Store](#data-store)
+- [Shell Access](#shell-access)
 - [Upgrading](#upgrading)
 
 # Introduction
@@ -81,9 +79,7 @@ bundle exec rake db:create RAILS_ENV=test
 bundle exec rake gitlab:test RAILS_ENV=test
 ```
 
-# Configuration
-
-## Data Store
+# Data Store
 GitLab CI Runner saves the configuration for connection and access to the GitLab CI server. In addition, SSH keys are generated as well. To make sure this configuration is not lost when when the container is stopped/deleted, we should mount a data store volume at
 
 * /home/gitlab_ci_runner/data
@@ -97,18 +93,31 @@ docker run --name runner-gitlab -d -h runner-gitlab.local.host \
   sameersbn/runner-gitlab:latest
 ```
 
-# Maintenance
+# Shell Access
 
-## SSH Login
-There are two methods to gain root login to the container, the first method is to add your public rsa key to the authorized_keys file and build the image.
-
-The second method is use the dynamically generated password. Every time the container is started a random password is generated using the pwgen tool and assigned to the root user. This password can be fetched from the docker logs.
+For debugging and maintenance purposes you may want access the containers shell. If you are using docker version `1.3.0` or higher you can access a running containers shell using `docker exec` command.
 
 ```bash
-docker logs runner-gitlab 2>&1 | grep '^User: ' | tail -n1
+docker exec -it runner-gitlab bash
 ```
 
-This password is not persistent and changes every time the image is executed.
+If you are using an older version of docker, you can use the [nsenter](http://man7.org/linux/man-pages/man1/nsenter.1.html) linux tool (part of the util-linux package) to access the container shell.
+
+Some linux distros (e.g. ubuntu) use older versions of the util-linux which do not include the `nsenter` tool. To get around this @jpetazzo has created a nice docker image that allows you to install the `nsenter` utility and a helper script named `docker-enter` on these distros.
+
+To install `nsenter` execute the following command on your host,
+
+```bash
+docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
+```
+
+Now you can access the container shell using the command
+
+```bash
+sudo docker-enter runner-gitlab
+```
+
+For more information refer https://github.com/jpetazzo/nsenter
 
 ## Upgrading
 
