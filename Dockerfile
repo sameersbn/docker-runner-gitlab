@@ -8,7 +8,7 @@ RUN apt-get update && \
       libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev \
       mysql-server mysql-client redis-server fontconfig && \
     gem install --no-document bundler && \
-    rm -rf /var/lib/apt/lists/* # 20150323
+    rm -rf /var/lib/apt/lists/* # 20150504
 
 ADD assets/ /app/
 RUN chmod 755 /app/setup/install
